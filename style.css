@@ -5,6 +5,7 @@
 	padding: 0;
 	box-sizing: border-box;
 	font-family: "Roboto", sans-serif;
+	font-weight: 600;
 }
 
 body {
@@ -14,9 +15,12 @@ body {
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-/* 2. Create the blurry overlay using a pseudo-element */
+/* blurry overlay using a pseudo-element */
 body::before {
 	content: ""; /* Essential for pseudo-elements to render */
 	position: absolute; /* Position relative to the body */
@@ -40,3 +44,166 @@ body::before {
 	/* Optional: Ensure it's below any main content you might have */
 	z-index: -1;
 }
+
+/* utility class */
+.regular-txt {
+	font-weight: 400;
+}
+
+.main-container {
+	border: solid;
+	border-color: white;
+	color: white;
+	width: 350px;
+	height: 500px;
+	background: linear-gradient(
+		to top,
+		rgba(0, 0, 0, 0.15),
+		rgba(255, 255, 255, 0.15)
+	);
+	border-radius: 12px;
+	backdrop-filter: blur(20px);
+	padding: 20px;
+}
+
+.input-container {
+	position: relative;
+	margin-bottom: 25px;
+}
+
+.city-input {
+	width: 100%;
+	padding: 10px 16px;
+	border-radius: 90px;
+	border: 3px solid transparent;
+	outline: none;
+	background: rgba(0, 0, 0, 0.15);
+	font-weight: 400;
+	font-size: medium;
+	color: white;
+	padding-right: 50px;
+}
+
+.city-input::placeholder {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.search-btn {
+	position: absolute;
+	right: 16px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	display: flex;
+	border: none;
+	cursor: pointer;
+	color: white;
+}
+
+/* section: weather info */
+.weather-info {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+}
+
+.location-date-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.location {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.weather-summary-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.weather-summary-img {
+	width: 120px;
+	height: 120px;
+}
+
+.weather-summary-info {
+	text-align: end;
+}
+
+.weather-conditions-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.condition-item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.condition-item span {
+	font-size: 30px;
+}
+
+.forecast-items-container {
+	display: flex;
+	gap: 15px;
+	overflow-x: scroll;
+	padding-bottom: 12px;
+}
+
+.forecast-items-container::-webkit-scrollbar {
+	height: 8px;
+}
+
+.forecast-items-container::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 99px;
+}
+
+.forecast-items-container::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.25);
+	border-radius: 99px;
+}
+
+.forecast-item {
+	min-width: 70px;
+	background-color: rgba(255, 255, 255, 0.1);
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 10px;
+	align-items: center;
+	border-radius: 12px;
+}
+
+.forecast-item:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.forecats-item-img {
+	width: 35px;
+	height: 35px;
+}
+
+/* end section: weather info */
+
+/* start section: message */
+.section-message {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 15px;
+	margin-top: 25%;
+}
+
+.section-message img {
+	height: 180px;
+	width: fit-content;
+}
+/* end section: message */
