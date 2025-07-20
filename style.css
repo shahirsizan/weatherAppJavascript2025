@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Roboto", sans-serif;
+}
+
+body {
+	background: url("assets/bg.jpg");
+	width: 100%;
+	height: 100vh;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+}
+
+/* 2. Create the blurry overlay using a pseudo-element */
+body::before {
+	content: ""; /* Essential for pseudo-elements to render */
+	position: absolute; /* Position relative to the body */
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(
+		255,
+		255,
+		255,
+		0.1
+	); /* A light, semi-transparent overlay color */
+	/* You can use rgba(0, 0, 0, 0.3) for a darker tint */
+
+	/* The magic happens here: Apply the backdrop-filter */
+	backdrop-filter: blur(
+		8px
+	); /* Adjust the pixel value for more or less blur */
+
+	/* Optional: Ensure it's below any main content you might have */
+	z-index: -1;
+}
