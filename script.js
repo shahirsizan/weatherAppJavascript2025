@@ -1,3 +1,5 @@
+const apiKey = "b73a47df5b1915c8ab16c3cfd4447bcd";
+
 // begin: query selectors
 // begin: query selectors
 const cityInput = document.querySelector(".city-input");
@@ -15,12 +17,6 @@ const currentDateTxt = document.querySelector(".current-date-txt");
 
 // end: query selectors
 // end: query selectors
-
-// begin: api key
-// begin: api key
-const apiKey = "b73a47df5b1915c8ab16c3cfd4447bcd";
-// end: api key
-// end: api key
 
 // begin: when search-icon clicked
 // begin: when search-icon clicked
@@ -100,6 +96,42 @@ const getFetchData = async (endPoint, city) => {
 // end: get data
 // end: get data
 
+// begin: render weather icon
+// begin: render weather icon
+const getWeatherIcon = () => {
+	// Not needed. The weatherAPI being used provides us with the icons.
+	// We will directly fetch the corresponding weather icon
+	// along with the weather info from the api.
+};
+// end: render weather icon
+// end: render weather icon
+
+const getCurrentDate = () => {
+	const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+	const months = [
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec",
+	];
+	const currentDateObj = new Date();
+	const currentDay = weekdays[currentDateObj.getDay()];
+	const currentDate = currentDateObj.getDate();
+	const currentMonth = months[currentDateObj.getMonth()];
+
+	const date_time_string = ` ${currentDay}, ${currentDate} ${currentMonth}`;
+	console.log(date_time_string);
+	return date_time_string;
+};
+
 // begin: process data
 // begin: process data
 const updateWeatherInfo = async (city) => {
@@ -117,12 +149,19 @@ const updateWeatherInfo = async (city) => {
 	const country = weatherData.name;
 	const temp = weatherData.main.temp;
 	const humidity = weatherData.main.humidity;
-	const id = weatherData.weather[0].id;
+	const weatherCode = weatherData.weather[0].id;
+	const weatherIconCode = weatherData.weather[0].icon;
 	const main = weatherData.weather[0].main;
 	const wind = weatherData.wind.speed;
 
-	// countryTxt.textContent = country;
-	// tempTxt.textContent = Math.round(temp) + "°C";
+	countryTxt.textContent = country;
+	tempTxt.textContent = Math.round(temp) + "°C";
+	conditionTxt.textContent = main;
+	humidityValueTxt.textContent = humidity + "%";
+	windValueTxt.textContent = wind + " M/s";
+	let weatherImgUrl = `https://openweathermap.org/img/wn/${weatherIconCode}@2x.png`;
+	weatherSummaryImg.src = weatherImgUrl;
+	currentDateTxt.textContent = getCurrentDate();
 
 	showDisplaySection(weatherInfoSection);
 };
