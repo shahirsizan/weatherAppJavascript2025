@@ -16,6 +16,7 @@
 			<!-- search input bar -->
 			<header class="input-container">
 				<input
+					id="city-input-box"
 					type="text"
 					placeholder="Search for city"
 					class="city-input"
@@ -48,6 +49,7 @@
 					</div>
 				</div>
 
+				<!-- humidity & wind -->
 				<div class="weather-conditions-container">
 					<div class="condition-item">
 						<span class="material-symbols-outlined">
@@ -131,7 +133,7 @@
 				</div>
 			</section>
 
-			<!-- when city not selected -->
+			<!-- when city selected but not found in server -->
 			<section class="not-found section-message" style="display: none">
 				<img src="assets/message/not-found.png" />
 				<div>

@@ -1,28 +1,51 @@
+// begin: query selectors
+// begin: query selectors
 const cityInput = document.querySelector(".city-input");
 const searchBtn = document.querySelector(".search-btn");
+const weatherInfoSection = document.querySelector(".weather-info");
+const notFoundSection = document.querySelector(".not-found");
+const searchCitySection = document.querySelector(".search-city");
+const countryTxt = document.querySelector(".country-txt");
+const tempTxt = document.querySelector(".temp-txt");
+const conditionTxt = document.querySelector(".condition-txt");
+const humidityValueTxt = document.querySelector(".humidity-value-txt");
+const windValueTxt = document.querySelector(".wind-value-txt");
+const weatherSummaryImg = document.querySelector(".weather-summary-img");
+const currentDateTxt = document.querySelector(".current-date-txt");
 
+// end: query selectors
+// end: query selectors
+
+// begin: api key
+// begin: api key
 const apiKey = "b73a47df5b1915c8ab16c3cfd4447bcd";
+// end: api key
+// end: api key
 
-// for clicking search icon
+// begin: when search-icon clicked
+// begin: when search-icon clicked
 searchBtn.addEventListener("click", (e) => {
-	// console.log(e);
 	if (cityInput.value.trim() != "") {
-		// console.log(cityInput.value);
 		updateWeatherInfo(cityInput.value);
 		cityInput.value = "";
 	}
 });
+// end: when search-icon clicked
+// end: when search-icon clicked
 
-// for pressing enter button
+// begin: when enter pressed
+// begin: when enter pressed
 cityInput.addEventListener("keydown", (e) => {
-	// console.log(e);
 	if (e.key == "Enter" && cityInput.value.trim() != "") {
-		// console.log(cityInput.value);
 		updateWeatherInfo(cityInput.value);
 		cityInput.value = "";
 	}
 });
+// end: when enter pressed
+// end: when enter pressed
 
+// begin: get data
+// begin: get data
 const getFetchData = async (endPoint, city) => {
 	const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&units=metric&appid=${apiKey}&units=metric `;
 	const response = await fetch(apiUrl);
@@ -74,8 +97,48 @@ const getFetchData = async (endPoint, city) => {
 	//     "cod": 200
 	// }
 };
+// end: get data
+// end: get data
 
+// begin: process data
+// begin: process data
 const updateWeatherInfo = async (city) => {
 	const weatherData = await getFetchData("weather", city);
+	// if city not found
+	if (weatherData.cod !== 200) {
+		console.log("Location not found in server");
+		showDisplaySection(notFoundSection);
+		return;
+	}
 	console.log("Weather Data: ", weatherData);
+	// if city found
+
+	// variables that will store the important information
+	const country = weatherData.name;
+	const temp = weatherData.main.temp;
+	const humidity = weatherData.main.humidity;
+	const id = weatherData.weather[0].id;
+	const main = weatherData.weather[0].main;
+	const wind = weatherData.wind.speed;
+
+	// countryTxt.textContent = country;
+	// tempTxt.textContent = Math.round(temp) + "°C";
+
+	showDisplaySection(weatherInfoSection);
 };
+// end: process data
+// end: process data
+
+// begin: conditional rendering of sections
+// begin: conditional rendering of sections
+const showDisplaySection = (section) => {
+	[weatherInfoSection, notFoundSection, searchCitySection].forEach(
+		(section) => {
+			section.style.display = "none";
+		}
+	);
+
+	section.style.display = "flex";
+};
+// end: conditional rendering of sections
+// end: conditional rendering of sections
