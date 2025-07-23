@@ -54,7 +54,7 @@ body::before {
 	border: solid;
 	border-color: white;
 	color: white;
-	width: 350px;
+	width: 300px;
 	height: 500px;
 	background: linear-gradient(
 		to top,
@@ -186,8 +186,8 @@ body::before {
 }
 
 .forecats-item-img {
-	width: 35px;
-	height: 35px;
+	width: 50px;
+	height: 50px;
 }
 
 /* end section: weather info */

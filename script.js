@@ -14,6 +14,7 @@ const humidityValueTxt = document.querySelector(".humidity-value-txt");
 const windValueTxt = document.querySelector(".wind-value-txt");
 const weatherSummaryImg = document.querySelector(".weather-summary-img");
 const currentDateTxt = document.querySelector(".current-date-txt");
+const forecastContainer = document.querySelector(".forecast-items-container");
 
 // end: query selectors
 // end: query selectors
@@ -106,7 +107,7 @@ const getWeatherIcon = () => {
 // end: render weather icon
 // end: render weather icon
 
-const getCurrentDate = () => {
+const getCurrentDate = (flag, dt_txt = "") => {
 	const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 	const months = [
 		"Jan",
@@ -122,12 +123,20 @@ const getCurrentDate = () => {
 		"Nov",
 		"Dec",
 	];
-	const currentDateObj = new Date();
-	const currentDay = weekdays[currentDateObj.getDay()];
-	const currentDate = currentDateObj.getDate();
-	const currentMonth = months[currentDateObj.getMonth()];
+	var date_time_string = "";
+	if (flag === "for current weather") {
+		const currentDateObj = new Date();
+		const currentDay = weekdays[currentDateObj.getDay()];
+		const currentDate = currentDateObj.getDate();
+		const currentMonth = months[currentDateObj.getMonth()];
 
-	const date_time_string = ` ${currentDay}, ${currentDate} ${currentMonth}`;
+		date_time_string = `${currentDay}, ${currentDate} ${currentMonth}`;
+	} else if (flag === "for forecast") {
+		let currentDateString = dt_txt.split(" ")[0];
+		let currentMonth = months[Number(currentDateString.split("-")[1]) - 1];
+		let currentDay = Number(currentDateString.split("-")[2]);
+		date_time_string = `${currentDay} ${currentMonth}`;
+	}
 	console.log(date_time_string);
 	return date_time_string;
 };
@@ -136,16 +145,14 @@ const getCurrentDate = () => {
 // begin: process data
 const updateWeatherInfo = async (city) => {
 	const weatherData = await getFetchData("weather", city);
-	// if city not found
+
+	// if city not found, return
 	if (weatherData.cod !== 200) {
 		console.log("Location not found in server");
 		showDisplaySection(notFoundSection);
 		return;
 	}
-	console.log("Weather Data: ", weatherData);
-	// if city found
 
-	// variables that will store the important information
 	const country = weatherData.name;
 	const temp = weatherData.main.temp;
 	const humidity = weatherData.main.humidity;
@@ -161,7 +168,9 @@ const updateWeatherInfo = async (city) => {
 	windValueTxt.textContent = wind + " M/s";
 	let weatherImgUrl = `https://openweathermap.org/img/wn/${weatherIconCode}@2x.png`;
 	weatherSummaryImg.src = weatherImgUrl;
-	currentDateTxt.textContent = getCurrentDate();
+	currentDateTxt.textContent = getCurrentDate("for current weather");
+
+	// `current weather` info ready. Time to prepare `forecast info`
 
 	await updateForecastInfo(city);
 
@@ -174,23 +183,78 @@ const updateWeatherInfo = async (city) => {
 // begin: process forecast data
 const updateForecastInfo = async (city) => {
 	const forecastDatas = await getFetchData("forecast", city);
-	const timeTaken = "12:00:00";
+	const targetTime = "12:00:00";
 	// console.log("iso date: ", new Date().toISOString());
 	// output: iso date:  2025-07-23T04:05:54.617Z
 	const todayDate = new Date().toISOString().split("T")[0];
 
-	let forecastDataList = [];
+	// forecastItemsContainer.innerHTML = "";
 
+	let forecastDataList = [];
 	forecastDatas.list.forEach((forecastData) => {
 		// console.log(forecastData);
-		if (forecastData.dt_txt.split(" ")[1] === timeTaken) {
+
+		// goal: filter weather data of `exactly 12:00:00` && `except for today`
+		if (
+			forecastData.dt_txt.split(" ")[1] === targetTime &&
+			forecastData.dt_txt.split(" ")[0] !== todayDate
+		) {
 			forecastDataList.push(forecastData);
 		}
 	});
 	console.log("filtered forecastDataList: ", forecastDataList);
+	renderForecast(forecastDataList);
 };
 // end: process forecast data
 // end: process forecast data
+
+// begin: render forecast section
+// begin: render forecast section
+const renderForecast = (forecastDataList) => {
+	// Clear existing dummy content of `forecastContainer`
+	forecastContainer.innerHTML = "";
+
+	forecastDataList.forEach((item) => {
+		var dt_txt = item.dt_txt;
+		var temp = item.main.temp;
+		var weatherIconCode = item.weather[0].icon;
+
+		// 1. Create forecast item `div`
+		const forecastItemDiv = document.createElement("div");
+		forecastItemDiv.classList.add("forecast-item");
+
+		// 2. Create and populate date element `h5`
+		const dateElement = document.createElement("h5");
+		dateElement.classList.add("forecast-item-date", "regular-txt");
+		dateElement.textContent = getCurrentDate("for forecast", dt_txt);
+
+		// 3. Append created element to parent `forecastItemDiv`
+		forecastItemDiv.appendChild(dateElement);
+
+		// 4. Create and populate icon element `img`
+		const iconElement = document.createElement("img");
+		iconElement.classList.add("forecats-item-img");
+		iconElement.src = `https://openweathermap.org/img/wn/${weatherIconCode}@2x.png`;
+
+		// 5. Append created element to parent `forecastItemDiv`
+		forecastItemDiv.appendChild(iconElement);
+
+		// 6. Create and populate temperature element `h5`
+		const tempElement = document.createElement("h5");
+		tempElement.classList.add("forecast-item-temp");
+		tempElement.textContent = `${Math.round(temp)}°C`;
+
+		// 7. Append created element to parent `forecastItemDiv`
+		forecastItemDiv.appendChild(tempElement);
+
+		// 8. Append this `forecastItemDiv` its parent `forecastContainer`
+		forecastContainer.appendChild(forecastItemDiv);
+
+		// repeat
+	});
+};
+// end: render forecast section
+// end: render forecast section
 
 // begin: conditional rendering of sections
 // begin: conditional rendering of sections
