@@ -40,10 +40,10 @@ cityInput.addEventListener("keydown", (e) => {
 // end: when enter pressed
 // end: when enter pressed
 
-// begin: get data
-// begin: get data
+// begin: get data api
+// begin: get data api
 const getFetchData = async (endPoint, city) => {
-	const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&units=metric&appid=${apiKey}&units=metric `;
+	const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&units=metric&appid=${apiKey}`;
 	const response = await fetch(apiUrl);
 	return response.json();
 	// response will be:
@@ -93,8 +93,8 @@ const getFetchData = async (endPoint, city) => {
 	//     "cod": 200
 	// }
 };
-// end: get data
-// end: get data
+// end: get data api
+// end: get data api
 
 // begin: render weather icon
 // begin: render weather icon
@@ -163,10 +163,34 @@ const updateWeatherInfo = async (city) => {
 	weatherSummaryImg.src = weatherImgUrl;
 	currentDateTxt.textContent = getCurrentDate();
 
+	await updateForecastInfo(city);
+
 	showDisplaySection(weatherInfoSection);
 };
 // end: process data
 // end: process data
+
+// begin: process forecast data
+// begin: process forecast data
+const updateForecastInfo = async (city) => {
+	const forecastDatas = await getFetchData("forecast", city);
+	const timeTaken = "12:00:00";
+	// console.log("iso date: ", new Date().toISOString());
+	// output: iso date:  2025-07-23T04:05:54.617Z
+	const todayDate = new Date().toISOString().split("T")[0];
+
+	let forecastDataList = [];
+
+	forecastDatas.list.forEach((forecastData) => {
+		// console.log(forecastData);
+		if (forecastData.dt_txt.split(" ")[1] === timeTaken) {
+			forecastDataList.push(forecastData);
+		}
+	});
+	console.log("filtered forecastDataList: ", forecastDataList);
+};
+// end: process forecast data
+// end: process forecast data
 
 // begin: conditional rendering of sections
 // begin: conditional rendering of sections
